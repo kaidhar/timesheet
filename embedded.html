@@ -1,0 +1,140 @@
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<!-- jQuery -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+ 
+<!-- jQuery UI -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.css" />
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.min.js"></script>
+<script src="js/FileSaver.js"></script>
+<script type="text/javascript">
+	function add_rows() {
+            var tr = document.createElement('tr');
+			var start = document.getElementById('start').value;
+			var end = document.getElementById('end').value;
+			var allow = document.getElementById('selAllowance').value;
+			var rowCount = document.getElementById('tbladd').rows.length;
+			
+			if(start == "")
+			{
+				alert("Please enter start date");
+				return
+			}
+			
+			var td0 = document.createElement("td");
+			td0.innerText = "Rahil";
+			tr.appendChild(td0);
+			
+			var td = document.createElement("td");
+			td.innerText = start;
+			tr.appendChild(td);
+			
+			var td1 = document.createElement("td");
+			td1.innerText = end;
+			tr.appendChild(td1);
+			
+			var td2 = document.createElement("td");
+			td2.innerText = allow;
+			tr.appendChild(td2);
+			
+			var td3 = document.createElement("td");
+			td3.innerHTML = "<input type='button' style='background:red;' value='X' onclick='javascript:delete_rows(" + rowCount + ");' />";
+			tr.appendChild(td3);
+			
+			document.getElementById('tbladd').appendChild(tr);
+        }
+		
+	function delete_rows(index) {
+		document.getElementById('tbladd').deleteRow(index);
+	}
+	
+	function save_output() {
+		var values = "";
+		for (let row of tbladd.rows) 
+		{
+			for(let cell of row.cells) 
+			{
+			   values = values + cell.innerText + ",";
+			}
+			values = values + "\n";
+		}
+
+		var blob = new Blob([values], {type: "text/plain;charset=utf-8"});
+		saveAs(blob, "Output.txt");
+		alert("File saved successfully");
+	}
+	
+</script>
+
+<script>
+	$( document ).ready(function() {
+	var textFile = null,
+	  makeTextFile = function (text) {
+		var data = new Blob([text], {type: 'text/plain'});
+
+		// If we are replacing a previously generated file we need to
+		// manually revoke the object URL to avoid memory leaks.
+		if (textFile !== null) {
+		  window.URL.revokeObjectURL(textFile);
+		}
+
+		textFile = window.URL.createObjectURL(data);
+
+		return textFile;
+	  };
+
+
+	  var create = document.getElementById('create');
+	  var textbox = document.getElementById('textbox');
+	
+	  create.addEventListener('click', function () {
+		var link = document.getElementById('downloadlink');
+		link.href = makeTextFile(textbox.value);
+		link.style.display = 'block';
+	  }, false);
+	});
+	
+</script>
+<style>
+.center {
+  margin-left: auto;
+  margin-right: auto;
+}
+</style>
+</head>
+<body>
+<h2 align="center">Add/Delete Allocation</h2>
+<br></br>
+<div style="text-align:center;">
+<label for="start">Start date:</label>
+<input type="date" id="start" name="start" />
+<label for="start">End date:</label>
+<input type="date" id="end" name="end" />
+<select id="selAllowance" name="selAllowance">
+<option>APAC</option>
+<option>EMEA</option>
+<option>AMER</option>
+<option>C</option>
+</select>
+<input type="button" value="Add" onclick="javascript:add_rows();" />
+<input type="button" value="Save" onclick="javascript:save_output();" />
+</div>
+<br>
+<div style="text-align:center;">
+<table id="tbladd" border="1" class="center">
+<tr>
+	<td><b>Employee ID</b></td>
+	<td><b>Start Date</b></td>
+	<td><b>End Date</b></td>
+	<td><b>Allowance</b></td>
+	<td><b>Delete</b></td>
+</tr>
+</table>
+</div>
+
+<!--- <textarea id="textbox">Type something here</textarea> <button id="create">Create file</button> 
+<a download="info.txt" id="downloadlink" style="display: none">Download</a> -->
+</body>
+</html>
